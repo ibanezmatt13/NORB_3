@@ -281,7 +281,7 @@ void sendUBX(uint8_t *MSG, uint8_t len) {
 }
 
 
-boolean getUBX_ACK(uint8_t *MSG) {
+int getUBX_ACK(uint8_t *MSG) {
   uint8_t b;
   uint8_t ackByteID = 0;
   uint8_t ackPacket[10];
@@ -310,12 +310,12 @@ boolean getUBX_ACK(uint8_t *MSG) {
     // Test for success
     if (ackByteID > 9) {
       // All packets in order!
-      return true;
+      return 1;
     }
  
     // Timeout if no valid response in 3 seconds
     if (millis() - startTime > 3000) { 
-      return false;
+      return 0;
     }
  
     // Make sure data is available to read
@@ -365,7 +365,7 @@ void loop()
   char buffer = 0;
   int n = 0;
   int state = 0;
-  byte flightmode_status = 0;
+  int flightmode_status = 0;
  
   while (1){
     buffer = Serial.read(); // Read Character
