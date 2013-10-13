@@ -351,7 +351,7 @@ void setup()
 
 void loop()
 {
-  char NMEA_string[70] = "";
+  char NMEA_string[90] = "";
   char buffer = 0;
   int n = 0;
   int state = 0;
@@ -365,7 +365,7 @@ void loop()
         if (buffer == '$'){
           state=1;
           n=0;
-          memset(NMEA_string,0,70); // Clear NMEA_sentence
+          memset(NMEA_string,0,90); // Clear NMEA_sentence
           NMEA_string[n++]=buffer;
         }
         break;
@@ -379,7 +379,7 @@ void loop()
         } else {
           NMEA_string[n++]=buffer;
         }
-        if (buffer >=68) {  // Stop at 68 (69 chars) so there's still a NULL at the end.
+        if (buffer >= 88) {  // Stop at 88 (89 chars) so there's still a NULL at the end.
           state=0;
         }
       break;
