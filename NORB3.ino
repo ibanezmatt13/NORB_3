@@ -370,7 +370,7 @@ void loop()
         }
         break;
       case 1:   // Got a string
-        if (buffer == '\r'){  // End of string
+        if ((buffer=='\r') || (buffer == '\n')){  // End of string
           flightmode_status = 0;
           sendUBX(setNav, sizeof(setNav)/sizeof(uint8_t));
           flightmode_status = getUBX_ACK(setNav);
