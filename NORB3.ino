@@ -201,7 +201,7 @@ int parse_NMEA(char* mystring, byte flightmode)
  
   // split NMEA string into individual data fields and check that a certain number of values have been obtained
   // $GPGGA,212748.000,5056.6505,N,00124.3531,W,2,07,1.8,102.1,M,47.6,M,0.8,0000*6B
-  if (sscanf(mystring, "%6[^,],%[^,],%9[^,],%1[^,],%[^,],%1[^,],%d,%2[^,],%*[^,],%[^,]", identifier, time, latitude, north_south, longitude, east_west, &lock, satellites, altitude) == 9)
+  if (sscanf(mystring, "%6[^,],%11[^,],%11[^,],%1[^,],%11[^,],%1[^,],%d,%2[^,],%*[^,],%9[^,]", identifier, time, latitude, north_south, longitude, east_west, &lock, satellites, altitude) == 9)
   {
     // check for the identifer being invalid
     if (strncmp(identifier, "$GPGGA", 6) != 0)
