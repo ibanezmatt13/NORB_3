@@ -376,7 +376,9 @@ void loop()
           state=1;
           n=0;
           memset(NMEA_string,0,70); // Clear NMEA_sentence
+          NMEA_string[n++]=buffer;
         }
+        break;
       case 1:   // Got a string
         if (buffer == '\r'){  // End of string
           flightmode_status = 0;
