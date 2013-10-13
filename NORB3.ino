@@ -4,7 +4,7 @@
     Credits:
       	
       	mfa298_M1ARI provided invaluable help in the understanding of how to create the code
-      	Functions for setting and checking flight mode from Anthony Stirk (M0UPU)
+      	Functions for setting/checking flightmode and sending to NTX2 evolved from Anthony Stirk (M0UPU) on UKHAS Wiki
       	A special thanks to Ed Moore for providing the massive encouragement and general assistance in the making of this code
       	Thanks to the many people on #highaltitude UKHAS who assisted in all other aspects of assistance.
 
