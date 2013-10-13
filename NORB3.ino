@@ -2,10 +2,11 @@
     Copyright (C) 2013 Matthew Beckett
 
     Credits:
-      mfa298_M1ARI provided invaluable help in the understanding of how to create the code
-      Functions for setting and checking flight mode from Anthony Stirk (M0UPU)
-      A special thanks to Ed Moore for providing the massive encouragement and general assistance in the making of this code
-      Thanks to the many people on #highaltitude UKHAS who assisted in all other aspects of assistance.
+      	
+      	mfa298_M1ARI provided invaluable help in the understanding of how to create the code
+      	Functions for setting and checking flight mode from Anthony Stirk (M0UPU)
+      	A special thanks to Ed Moore for providing the massive encouragement and general assistance in the making of this code
+      	Thanks to the many people on #highaltitude UKHAS who assisted in all other aspects of assistance.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
