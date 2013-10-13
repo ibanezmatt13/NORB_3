@@ -110,17 +110,7 @@ void rtty_txbyte (char c)
  
 void rtty_txbit (int bit)
 {
-  if (bit)
-  {
-    // high
-    digitalWrite(RADIOPIN, HIGH);
-  }
-  else
-  {
-    // low
-    digitalWrite(RADIOPIN, LOW);
- 
-  }
+  digitalWrite(RADIOPIN, bit);
  
   //50 baud...
   delayMicroseconds(10000);  
