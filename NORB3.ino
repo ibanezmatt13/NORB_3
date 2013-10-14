@@ -32,7 +32,7 @@ uint8_t setNav[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x16, 0xDC };
 
 
-
+// calculates and returns checksum for datastring
 uint16_t gps_CRC16_checksum (char *string)
 {
   size_t i;
@@ -52,15 +52,15 @@ uint16_t gps_CRC16_checksum (char *string)
 }  
  
 
- 
+   
 void rtty_txstring (char * string)
 {
- 
-  /* Simple function to sent a char at a time to 
-   	** rtty_txbyte function. 
-   	** NB Each char is one byte (8 Bits)
-   	*/
- 
+
+ /* function to send a each character
+   of the string to the rtty_txbyte().
+   Each character is one byte (8 bits)
+   */
+   
   char c;
  
   c = *string++;
@@ -76,14 +76,10 @@ void rtty_txstring (char * string)
  
 void rtty_txbyte (char c)
 {
-  /* Simple function to sent each bit of a char to 
-   	** rtty_txbit function. 
-   	** NB The bits are sent Least Significant Bit first
-   	**
-   	** All chars should be preceded with a 0 and 
-   	** proceded with a 1. 0 = Start bit; 1 = Stop bit
-   	**
-   	*/
+  /* function to send each bit of the character to the
+     rtty_txbit() All chars should be preceded with a 0 and 
+     proceded with a 1. 0 = Start bit; 1 = Stop bit
+  */
  
   int i;
  
