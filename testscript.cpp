@@ -1,8 +1,14 @@
+/* Test C++ script to emulate the NMEA parser 
+   in the tracker code for user-inputted NMEA
+   instead of serial data.                      
+*/
+
+
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
- 
- 
+
 
 // function to convert latitude into decimal degrees
 int check_latitude(char* latitude, char* ind, float* new_latitude)
