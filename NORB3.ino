@@ -230,7 +230,7 @@ int parse_NMEA(char* mystring, byte flightmode)
       return 0;
     }
     
-    // store the return value of the latitude/longitude functions accordinly
+    // store the return value of the latitude/longitude functions accordingly
     check_latitude_error = check_latitude(latitude, north_south, &new_latitude);
     check_longitude_error = check_longitude(longitude, east_west, &new_longitude);
     
