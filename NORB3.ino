@@ -1,4 +1,4 @@
-/*  All code for NORB_v3 AVR HAB Tracker
+/*  Main code for NORB_v3 AVR HAB Tracker
     Copyright (C) 2013 Matthew Beckett
 
     Credits:
