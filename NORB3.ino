@@ -347,39 +347,25 @@ void setup()
 
 void loop()
 {
-  char NMEA_string[90] = "";
-  char buffer = 0;
+  char character;
+  char string[90];
   int n = 0;
-  int state = 0;
-  int flightmode_status = 0;
- 
-  while (1){
-    buffer = Serial.read(); // Read Character
- 
-    switch(state){
-      case 0: // Waiting for a $
-        if (buffer == '$'){
-          state=1;
-          n=0;
-          memset(NMEA_string,0,90); // Clear NMEA_sentence
-          NMEA_string[n++]=buffer;
-        }
-        break;
-      case 1:   // Got a string
-        if ((buffer=='\r') || (buffer == '\n')){  // End of string
-          flightmode_status = 0;
-          sendUBX(setNav, sizeof(setNav)/sizeof(uint8_t));
-          flightmode_status = getUBX_ACK(setNav);
-          parse_NMEA(NMEA_string, flightmode_status);
-          state=0;
-        } else {
-          NMEA_string[n++]=buffer;
-        }
-        if (buffer >= 88) {  // Stop at 88 (89 chars) so there's still a NULL at the end.
-          state=0;
-        }
-      break;
-    } // Close switch
-  } // Close while
-}
- 
+  
+  character = Serial.read(); //read character
+  
+  if (character == '$'){ //if we read a $
+    
+    while(character != '\n'){ //while we've not reached the end of the data
+      string[n] = character; //store it at the nth position in string
+      n++; //increment n by 1
+      character = Serial.read(); //read another character
+      
+      if (n >= 88){ //if we received 88 or more 
+        break; //break this loop
+      }
+      if (character == '\n'){ //if we got to the end of the data
+        rtty_txstring(string); //transmit the string we got
+        memset(string,0,90); //empty string ready for reloop
+      }
+    }
+  }
