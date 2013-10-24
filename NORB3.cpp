@@ -24,6 +24,8 @@
 #include <util/crc16.h>
 
 #define RADIOPIN 9
+#define LED_1 5
+#define LED_2 6
 
 // this command will set flight mode
 uint8_t setNav[] = {
@@ -338,8 +340,11 @@ void setupGPS()
  
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(9600); //begin communication with GPS
   pinMode(RADIOPIN, OUTPUT);
+  pinMode(LED_1, OUTPUT);
+  pinMode(LED_2, OUTPUT);
+  digitalWrite(LED_1, HIGH); //turn LED 1 on
   setupGPS();
 }
 
