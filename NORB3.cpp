@@ -175,7 +175,7 @@ int check_longitude(char* longitude, char* ind, float* new_longitude)
  
  
 // function to parse NMEA data and send to NTX2
-int parse_NMEA(char* mystring)
+int parse_NMEA(char* mystring, int flightmode)
 {
   int counter = 0; // sentence id
   float new_latitude;
@@ -245,7 +245,7 @@ int parse_NMEA(char* mystring)
     
     
     // pull everything together into a datastring and print
-    sprintf(datastring, "%s,%s,%d,%f,%s,%f,%s,%d,%s,%d,%s", identifier, time, counter, new_latitude, north_south, new_longitude, east_west, lock, satellites, altitude);
+    sprintf(datastring, "%s,%s,%d,%f,%s,%f,%s,%d,%s,%d,%s", identifier, time, counter, new_latitude, north_south, new_longitude, east_west, lock, flightmode, satellites, altitude);
     unsigned int CHECKSUM = gps_CRC16_checksum(datastring);  // Calculates the checksum for this datastring
     char checksum_str[7];
     sprintf(checksum_str, "*%04X\n", CHECKSUM);
@@ -363,7 +363,9 @@ void loop()
         break; //break this loop
       }
       if (character == '\n'){ //if we got to the end of the data
-        parse_NMEA(string);
+        sendUBX(setNav, sizeof(setNav)/sizeof(uint8_t));
+        flightmode = getUBX_ACK(setNav);
+        parse_NMEA(string, flightmode);
         memset(string,0,90); //empty string ready for reloop
       }
     }
