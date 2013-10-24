@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <util/crc16.h>
 
-#define RADIOPIN 13
+#define RADIOPIN 9
 
 // this command will set flight mode
 uint8_t setNav[] = {
@@ -325,8 +325,6 @@ void setupGPS()
 {
   Serial.println("$PUBX,40,GLL,0,0,0,0*5C");
   delay(1000);
-  Serial.println("$PUBX,40,GGA,0,0,0,0*5A");
-  delay(1000);
   Serial.println("$PUBX,40,GSA,0,0,0,0*4E");
   delay(1000);
   Serial.println("$PUBX,40,RMC,0,0,0,0*47");
@@ -350,6 +348,7 @@ void loop()
   char character;
   char string[90];
   int n = 0;
+  int flightmode = 0;
   
   character = Serial.read(); //read character
   
