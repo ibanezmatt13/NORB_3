@@ -109,6 +109,7 @@ void rtty_txbyte (char c)
 void rtty_txbit (int bit)
 {
   digitalWrite(RADIOPIN, bit);
+  digitalWrite(LED_2, bit);
  
   //50 baud...
   delayMicroseconds(10000);  
