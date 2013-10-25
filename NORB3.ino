@@ -117,14 +117,7 @@ void rtty_txbit (int bit)
                             
 } 
  
- 
-float getVoltage()
-{
-  int raw_voltage = analogRead(A0);
-  float voltage= raw_voltage * (1.5 / 1024.0);
-  return voltage;
-}
- 
+
  
 // function to convert latitude into decimal degrees
 int check_latitude(char* latitude, char* ind, float* new_latitude)
@@ -203,7 +196,6 @@ int parse_NMEA(char* mystring, int flightmode)
   char datastring[100] = "";
   int check_latitude_error;
   int check_longitude_error;
-  float battery;
  
  
   // split NMEA string into individual data fields and check that a certain number of values have been obtained
@@ -240,8 +232,7 @@ int parse_NMEA(char* mystring, int flightmode)
     // store the return value of the latitude/longitude functions accordingly
     check_latitude_error = check_latitude(latitude, north_south, &new_latitude);
     check_longitude_error = check_longitude(longitude, east_west, &new_longitude);
-    
-    battery = getVoltage();
+   
     
     // if check_latitude() failed
     if (check_latitude_error == -1)
@@ -258,7 +249,7 @@ int parse_NMEA(char* mystring, int flightmode)
     
     
     // pull everything together into a datastring and print
-    sprintf(datastring, "%s,%s,%d,%f,%s,%f,%s,%d,%s,%d,%s", identifier, time, counter, new_latitude, north_south, new_longitude, east_west, lock, flightmode, satellites, battery, altitude);
+    sprintf(datastring, "%s,%s,%d,%f,%s,%f,%s,%d,%s,%d,%s", identifier, time, counter, new_latitude, north_south, new_longitude, east_west, lock, flightmode, satellites, altitude);
     unsigned int CHECKSUM = gps_CRC16_checksum(datastring);  // Calculates the checksum for this datastring
     char checksum_str[7];
     sprintf(checksum_str, "*%04X\n", CHECKSUM);
