@@ -102,6 +102,9 @@ int check_latitude(char* latitude, char* ind, float* new_latitude)
  
  
  
+ 
+ 
+ 
 // function to convert longitude into decimal degrees
 int check_longitude(char* longitude, char* ind, float* new_longitude)
 {
@@ -333,6 +336,7 @@ void loop()
     if (character == '$'){
       n = 0;
       datastring[n] = character;
+      n = 1;
     }
     
     else if (character == '\n'){
@@ -348,13 +352,11 @@ void loop()
     
     else if (n > 0){
       datastring[n] = character;
+      n++;
     }
     
     if (n >= 98){
       n = 0;
     }
-    
-    n++;
-    
   }
 }
