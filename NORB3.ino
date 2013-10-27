@@ -72,7 +72,7 @@ void rtty_txbit (int bit)
   delayMicroseconds(10000);  
   delayMicroseconds(10000); 
                             
-} 
+}  
  
  
 // function to convert latitude into decimal degrees
@@ -154,11 +154,13 @@ int parse_NMEA(char* mystring, int flightmode)
   int check_latitude_error;
   int check_longitude_error;
   char* callsign = "$$NORB_2";
+  float vbatt = ((3.3 / 1024)* analogRead(0));
+  char voltage[5];
  
  
   // split NMEA string into individual data fields and check that a certain number of values have been obtained
   // $GPGGA,212748.000,5056.6505,N,00124.3531,W,2,07,1.8,102.1,M,47.6,M,0.8,0000*6B
-  if (sscanf(mystring, "%6[^,],%11[^,],%11[^,],%1[^,],%11[^,],%1[^,],%d,%3[^,],%*[^,],%9[^,]", identifier, time, latitude, north_south, longitude, east_west, &lock, satellites, altitude) == 9)
+  if (sscanf(mystring, "%6[^,],%11[^,],%11[^,],%1[^,],%11[^,],%1[^,],%d,%d,%*[^,],%9[^,]", identifier, time, latitude, north_south, longitude, east_west, &lock, &satellites, altitude) == 9)
   {
     // check for the identifer being invalid
     if (strncmp(identifier, "$GPGGA", 6) != 0)
@@ -203,15 +205,17 @@ int parse_NMEA(char* mystring, int flightmode)
     
     dtostrf(new_latitude,9,6,new_lat);
     dtostrf(new_longitude,9,6,new_lon);
+    dtostrf(vbatt,3,2,voltage);
     
     
     // pull everything together into a datastring and print
-    sprintf(datastring, "%s,%d,%s,%s,%s,%s,%d,%d", callsign, counter ,time, new_lat, new_lon, altitude, lock, flightmode);
+    sprintf(datastring, "%s,%d,%s,%s,%s,%s,%d,%d,%d,%s", callsign, counter ,time, new_lat, new_lon, altitude, lock, flightmode, satellites, voltage);
     unsigned int CHECKSUM = gps_CRC16_checksum(datastring);  // Calculates the checksum for this datastring
     char checksum_str[7];
     sprintf(checksum_str, "*%04X\n", CHECKSUM);
     strcat(datastring,checksum_str);
     rtty_txstring (datastring); 
+    counter++;
   }
   else
   {
@@ -223,6 +227,7 @@ int parse_NMEA(char* mystring, int flightmode)
  
 void setupGPS()
 {
+  //disable unwanted NMEA sentences
   Serial.println("$PUBX,40,GLL,0,0,0,0*5C");
   delay(1000);
   Serial.println("$PUBX,40,GSA,0,0,0,0*4E");
@@ -345,7 +350,6 @@ void loop()
       sendUBX(setNav, sizeof(setNav)/sizeof(uint8_t));
       flightmode = getUBX_ACK(setNav);
       parse_NMEA(datastring, flightmode);
-      counter++;
       n = 0;
       flightmode = 0;
     }
