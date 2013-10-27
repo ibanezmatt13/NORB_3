@@ -206,7 +206,7 @@ int parse_NMEA(char* mystring, int flightmode)
     
     
     // pull everything together into a datastring and print
-    sprintf(datastring, "%s,%d,%s,%s,%s,%s,%d,%d,%d", callsign, counter ,time, new_lat, new_lon, altitude, lock, flightmode, satellites);
+    sprintf(datastring, "%s,%d,%s,%s,%s,%s,%d,%d", callsign, counter ,time, new_lat, new_lon, altitude, lock, flightmode);
     unsigned int CHECKSUM = gps_CRC16_checksum(datastring);  // Calculates the checksum for this datastring
     char checksum_str[7];
     sprintf(checksum_str, "*%04X\n", CHECKSUM);
