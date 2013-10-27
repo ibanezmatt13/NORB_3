@@ -102,9 +102,6 @@ int check_latitude(char* latitude, char* ind, float* new_latitude)
  
  
  
- 
- 
- 
 // function to convert longitude into decimal degrees
 int check_longitude(char* longitude, char* ind, float* new_longitude)
 {
@@ -148,7 +145,7 @@ int parse_NMEA(char* mystring, int flightmode)
   char longitude[12];
   char east_west[2];
   int lock;
-  char satellites[3];
+  int satellites;
   char altitude[10];
   char datastring[100] = "";
   int check_latitude_error;
