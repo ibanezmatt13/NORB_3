@@ -1,21 +1,10 @@
-/*  Main code for NORB_v3 AVR HAB Tracker
-    Copyright (C) 2013 Matthew Beckett
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details. */
-
 #include <util/crc16.h>
 
 #define RADIOPIN 9
 #define LED_1 5
 #define LED_2 6  
+
+int counter = 0; // sentence id
 
 // this command will set flight mode
 uint8_t setNav[] = {
@@ -147,7 +136,6 @@ int check_longitude(char* longitude, char* ind, float* new_longitude)
 // function to parse NMEA data and send to NTX2
 int parse_NMEA(char* mystring, int flightmode)
 {
-  int counter = 0; // sentence id
   float new_latitude;
   float new_longitude;
   char new_lat[12];
@@ -165,11 +153,12 @@ int parse_NMEA(char* mystring, int flightmode)
   char datastring[100] = "";
   int check_latitude_error;
   int check_longitude_error;
+  char* callsign = "$$NORB_2";
  
  
   // split NMEA string into individual data fields and check that a certain number of values have been obtained
   // $GPGGA,212748.000,5056.6505,N,00124.3531,W,2,07,1.8,102.1,M,47.6,M,0.8,0000*6B
-  if (sscanf(mystring, "%6[^,],%11[^,],%11[^,],%1[^,],%11[^,],%1[^,],%d,%2[^,],%*[^,],%9[^,]", identifier, time, latitude, north_south, longitude, east_west, &lock, satellites, altitude) == 9)
+  if (sscanf(mystring, "%6[^,],%11[^,],%11[^,],%1[^,],%11[^,],%1[^,],%d,%3[^,],%*[^,],%9[^,]", identifier, time, latitude, north_south, longitude, east_west, &lock, satellites, altitude) == 9)
   {
     // check for the identifer being invalid
     if (strncmp(identifier, "$GPGGA", 6) != 0)
@@ -217,7 +206,7 @@ int parse_NMEA(char* mystring, int flightmode)
     
     
     // pull everything together into a datastring and print
-    sprintf(datastring, "%s,%s,%d,%s,%s,%s,%s,%d,%s,%d,%s", identifier, time, counter, new_lat, north_south, new_lon, east_west, lock, flightmode, satellites, altitude);
+    sprintf(datastring, "%s,%d,%s,%s,%s,%s,%d,%d,%d", callsign, counter ,time, new_lat, new_lon, altitude, lock, flightmode, satellites);
     unsigned int CHECKSUM = gps_CRC16_checksum(datastring);  // Calculates the checksum for this datastring
     char checksum_str[7];
     sprintf(checksum_str, "*%04X\n", CHECKSUM);
@@ -355,6 +344,7 @@ void loop()
       sendUBX(setNav, sizeof(setNav)/sizeof(uint8_t));
       flightmode = getUBX_ACK(setNav);
       parse_NMEA(datastring, flightmode);
+      counter++;
       n = 0;
       flightmode = 0;
     }
