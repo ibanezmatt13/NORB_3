@@ -3,7 +3,8 @@
  
  By Matthew Beckett
  
- Thanks and credits :
+ Thanks and credits:
+ -------------------
  
  Massive thanks to Steve Smith, David Akerman, Anthony Stirk, Chris Stubbs, Phil Heron, Ed Moore, mfa298, and all other
  brilliant people who assisted in the creation of this code.
