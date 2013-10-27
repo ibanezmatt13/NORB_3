@@ -154,8 +154,8 @@ int parse_NMEA(char* mystring, int flightmode)
   int check_latitude_error;
   int check_longitude_error;
   char* callsign = "$$NORB_2";
-  float vbatt = ((3.3 / 1024)* analogRead(0));
-  char voltage[5];
+  float vbatt;
+  char voltage[10];
  
  
   // split NMEA string into individual data fields and check that a certain number of values have been obtained
@@ -202,6 +202,9 @@ int parse_NMEA(char* mystring, int flightmode)
     {
       return 0;
     }
+    
+    
+    vbatt = ((3.3 / 1024)* analogRead(0));
     
     dtostrf(new_latitude,9,6,new_lat);
     dtostrf(new_longitude,9,6,new_lon);
