@@ -1,8 +1,13 @@
 #include <util/crc16.h>
+#include <SHT1x.h>
 
 #define RADIOPIN 9
 #define LED_1 5
 #define LED_2 6  
+#define dataPin A4
+#define clockPin A5
+
+SHT1x sht1x(dataPin, clockPin);
 
 int counter = 0; // sentence id
 
@@ -101,8 +106,17 @@ int check_latitude(char* latitude, char* ind, float* new_latitude)
 }
  
  
- 
- 
+void SHT11(float* temp, float* hum)
+{
+  float temp_c;
+  float humidity;
+  
+  temp_c = sht1x.readTemperatureC();
+  humidity = sht1x.readHumidity();
+  
+  *temp = temp_c;
+  *hum = humidity;
+}
  
  
 // function to convert longitude into decimal degrees
@@ -153,9 +167,13 @@ int parse_NMEA(char* mystring, int flightmode)
   char datastring[100] = "";
   int check_latitude_error;
   int check_longitude_error;
-  char* callsign = "$$NORB_2";
+  char* callsign = "$$NORB_Test";
   float vbatt;
   char voltage[10];
+  float temp;
+  float hum;
+  char temp_string[10];
+  char hum_string[10];
  
  
   // split NMEA string into individual data fields and check that a certain number of values have been obtained
@@ -205,14 +223,17 @@ int parse_NMEA(char* mystring, int flightmode)
     
     
     vbatt = ((3.3 / 1024)* analogRead(0));
+    SHT11(&temp, &hum);
     
     dtostrf(new_latitude,9,6,new_lat);
     dtostrf(new_longitude,9,6,new_lon);
     dtostrf(vbatt,3,2,voltage);
+    dtostrf(temp,3,2,temp_string);
+    dtostrf(hum,3,2,hum_string);
     
     
     // pull everything together into a datastring and print
-    sprintf(datastring, "%s,%d,%s,%s,%s,%s,%d,%d,%d,%s", callsign, counter ,time, new_lat, new_lon, altitude, lock, flightmode, satellites, voltage);
+    sprintf(datastring, "%s,%d,%s,%s,%s,%s,%d,%d,%d,%s,%s,%s", callsign, counter ,time, new_lat, new_lon, altitude, lock, flightmode, satellites, voltage, temp_string, hum_string);
     unsigned int CHECKSUM = gps_CRC16_checksum(datastring);  // Calculates the checksum for this datastring
     char checksum_str[7];
     sprintf(checksum_str, "*%04X\n", CHECKSUM);
