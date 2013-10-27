@@ -8,12 +8,19 @@ Main Components:
 ===============
 
 NTX2 434MHz Radio Transmitter
+
 Ublox MAX 7 GPS Module
+
 Amtel ATMEGA328P-AU Microcontroller
+
 SHT11 Temperature/Humidity Sensor
+
 TMP102 I2C Temperature Sensor
+
 Micro SD socket
+
 TPS61201 Step-up Boost Regulator
+
 Taoglas GPS Antenna
 
 
