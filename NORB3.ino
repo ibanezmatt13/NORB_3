@@ -25,6 +25,7 @@
  
 #include <util/crc16.h>
 #include <SHT1x.h>
+#include <SD.h>
 
 #define RADIOPIN 9
 #define LED_1 5
@@ -32,7 +33,9 @@
 #define dataPin A4
 #define clockPin A5
 
-SHT1x sht1x(dataPin, clockPin);
+File logfile; // file object for SD
+
+SHT1x sht1x(dataPin, clockPin); 
 
 int counter = 0; // sentence id
 
@@ -200,7 +203,7 @@ int parse_NMEA(char* mystring, int flightmode)
   float hum;
   char temp_string[10];
   char hum_string[10];
- 
+  
  
   // split NMEA string into individual data fields and check that a certain number of values have been obtained
   // $GPGGA,212748.000,5056.6505,N,00124.3531,W,2,07,1.8,102.1,M,47.6,M,0.8,0000*6B
@@ -260,6 +263,16 @@ int parse_NMEA(char* mystring, int flightmode)
     
     // pull everything together into a datastring and print
     sprintf(datastring, "%s,%d,%s,%s,%s,%s,%d,%d,%d,%s,%s,%s", callsign, counter ,time, new_lat, new_lon, altitude, lock, flightmode, satellites, voltage, temp_string, hum_string);
+    
+    logfile = SD.open("data.txt", FILE_WRITE); // open logfile
+    
+    if (logfile){
+      logfile.println(datastring);
+      logfile.close();
+    } else {
+      logfile.close();
+    }
+    
     unsigned int CHECKSUM = gps_CRC16_checksum(datastring);  // Calculates the checksum for this datastring
     char checksum_str[7];
     sprintf(checksum_str, "*%04X\n", CHECKSUM);
@@ -375,7 +388,9 @@ void setup()
   pinMode(RADIOPIN, OUTPUT);
   pinMode(LED_1, OUTPUT);
   pinMode(LED_2, OUTPUT);
+  pinMode(10, OUTPUT); // needed for SD library
   setupGPS();
+  SD.begin(7); 
 }
  
 void loop()
