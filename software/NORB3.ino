@@ -30,7 +30,7 @@
 #define RADIOPIN 9
 #define LED_1 5
 #define LED_2 6  
-#define dataPin A4
+#define dataPin A4     
 #define clockPin A5
 
 File logfile; // file object for SD
@@ -134,7 +134,8 @@ int check_latitude(char* latitude, char* ind, float* new_latitude)
   }
 }
  
- 
+
+//function to calculate and store temp/humdity in given location in memory
 void SHT11(float* temp, float* hum)
 {
   float temp_c;
@@ -254,6 +255,7 @@ int parse_NMEA(char* mystring, int flightmode)
     vbatt = ((3.3 / 1024)* analogRead(0));
     SHT11(&temp, &hum);
     
+    // convert floats to strings
     dtostrf(new_latitude,9,6,new_lat);
     dtostrf(new_longitude,9,6,new_lon);
     dtostrf(vbatt,3,2,voltage);
@@ -266,8 +268,8 @@ int parse_NMEA(char* mystring, int flightmode)
     
     logfile = SD.open("data.txt", FILE_WRITE); // open logfile
     
-    if (logfile){
-      logfile.println(datastring);
+    if (logfile){  // if log file opened ok
+      logfile.println(datastring); //write datastring to file
       logfile.close();
     } else {
       logfile.close();
