@@ -5,7 +5,7 @@ NORB 3 is the third generation in the NORB AVR-based HAB tracking PCB series.
 
 
 Main Components:
-===============
+================
 
 NTX2 434MHz Radio Transmitter
 
