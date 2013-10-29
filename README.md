@@ -27,7 +27,7 @@ Taoglas GPS Antenna
 More information including the development, current status and pictures of the tracker can be found at NORB's website:
 
                                                       
-                                              http://www.norb.co.uk
+                                                http://www.norb.co.uk
 
 
 
