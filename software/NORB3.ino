@@ -219,6 +219,7 @@ int parse_NMEA(char* mystring, int flightmode)
     // check for a valid lock
     if (lock == 0)
     {
+      rtty_txstring("NO GPS LOCK");
       return 0;
     }
     
