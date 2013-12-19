@@ -1,4 +1,4 @@
-WARNING - Current software allows transmission to only occur on receipt of a full GPS lock. "No-lock TX" will be implemented soon
+WARNING - There is a slight design issue with the schematic for the PCB which I had to bodge to get the micro SD working. The VSS pins of the connector should be connected to a GND point on the board, which for some reason it isn't. So, I had to solder a wire going from the connector to a ground point on the board; not pretty but it works.
 
 
 
