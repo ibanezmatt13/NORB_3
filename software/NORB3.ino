@@ -267,7 +267,7 @@ int parse_NMEA(char* mystring, int flightmode)
     // pull everything together into a datastring and print
     sprintf(datastring, "%s,%d,%s,%s,%s,%s,%d,%d,%d,%s,%s,%s", callsign, counter ,time, new_lat, new_lon, altitude, lock, flightmode, satellites, voltage, temp_string, hum_string);
     
-    SD.begin(7); // initialise SPI bus for SD
+    
     
     logfile = SD.open("data.txt", FILE_WRITE); // open logfile
     
@@ -277,6 +277,8 @@ int parse_NMEA(char* mystring, int flightmode)
     } else {
       logfile.close();
     }
+    
+    
     
     unsigned int CHECKSUM = gps_CRC16_checksum(datastring);  // Calculates the checksum for this datastring
     char checksum_str[7];
@@ -395,6 +397,7 @@ void setup()
   pinMode(LED_2, OUTPUT);
   pinMode(10, OUTPUT); // needed for SD library
   setupGPS();
+  SD.begin(7);
 }
  
 void loop()
