@@ -107,7 +107,34 @@ void rtty_txbit (int bit)
   delayMicroseconds(10000); 
                             
 }  
- 
+
+void LED_flash() //flash LED 6 times
+{
+  digitalWrite(LED_2, HIGH);
+  delay(500);
+  digitalWrite(LED_2, LOW);
+  delay(500);
+  digitalWrite(LED_2, HIGH);
+  delay(500);
+  digitalWrite(LED_2, LOW);
+  delay(500);
+  digitalWrite(LED_2, HIGH);
+  delay(500);
+  digitalWrite(LED_2, LOW);
+  delay(500);
+  digitalWrite(LED_2, HIGH);
+  delay(500);
+  digitalWrite(LED_2, LOW);
+  delay(500);
+  digitalWrite(LED_2, HIGH);
+  delay(500);
+  digitalWrite(LED_2, LOW);
+  delay(500);
+  digitalWrite(LED_2, HIGH);
+  delay(500);
+  digitalWrite(LED_2, LOW);
+  delay(500);
+}
  
 // function to convert latitude into decimal degrees
 int check_latitude(char* latitude, char* ind, float* new_latitude)
@@ -219,7 +246,6 @@ int parse_NMEA(char* mystring, int flightmode)
     // check for a valid lock
     if (lock == 0)
     {
-      rtty_txstring("NO GPS LOCK"); // if no lock, tell us!
       return 0;
     }
     
@@ -398,6 +424,7 @@ void setup()
   pinMode(10, OUTPUT); // needed for SD library
   setupGPS();
   SD.begin(7);
+  LED_flash();
 }
  
 void loop()
