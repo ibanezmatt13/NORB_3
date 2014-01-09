@@ -1,4 +1,4 @@
-@title MultiMovie 1b
+@title NORB Movie Code
 @param x minutes per file
 @default x 2
 press "shoot_half"  
