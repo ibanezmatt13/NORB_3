@@ -4,6 +4,11 @@
 press "shoot_half"  
 sleep 2000 
 release "shoot_half"
+set_backlight(0)
+sleep 500
+set_backlight(0)
+sleep 500
+
 :loop
     print "segment started..."
     press "video" 
