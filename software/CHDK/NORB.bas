@@ -4,9 +4,11 @@
 press "shoot_half"  
 sleep 2000 
 release "shoot_half"
-set_backlight(0)
+set_lcd_display 0
 sleep 500
-set_backlight(0)
+set_lcd_display 0
+sleep 500
+set_lcd_display 0
 sleep 500
 
 :loop
@@ -15,6 +17,7 @@ sleep 500
     sleep 2000
     release "video"
     s=get_tick_count 
+    sleep 1000
     do 
         sleep 500 
     until x<=((get_tick_count-s)/60000 )
