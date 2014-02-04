@@ -162,6 +162,10 @@ int check_latitude(char* latitude, char* ind, float* new_latitude)
 }
  
 
+// simple function to remove leading space from a string
+char *ltrim(char *string) { return(*string == ' ' ? string + 1 : string); }
+
+
 //function to calculate and store temp/humdity in given location in memory
 void SHT11(float* temp, float* hum)
 {
@@ -211,6 +215,7 @@ int parse_NMEA(char* mystring, int flightmode)
   float new_longitude;
   char new_lat[12];
   char new_lon[12];
+  char* trimmed_lon;
   char time[12];
   int time_length;
   char identifier[7];
@@ -221,10 +226,11 @@ int parse_NMEA(char* mystring, int flightmode)
   int lock;
   int satellites;
   char altitude[10];
-  char datastring[100] = "";
+  char log_datastring[100] = "";
+  char send_datastring[100] = "";
   int check_latitude_error;
   int check_longitude_error;
-  char* callsign = "$$NORB_Test";
+  char* callsign = "NORB_2";
   float vbatt;
   char voltage[10];
   float temp;
@@ -289,16 +295,17 @@ int parse_NMEA(char* mystring, int flightmode)
     dtostrf(temp,3,2,temp_string);
     dtostrf(hum,3,2,hum_string);
     
+    trimmed_lon = ltrim(new_lon); // if payload is east of prime meridian, a leading space needs to be removed
     
-    // pull everything together into a datastring and print
-    sprintf(datastring, "%s,%d,%s,%s,%s,%s,%d,%d,%d,%s,%s,%s", callsign, counter ,time, new_lat, new_lon, altitude, lock, flightmode, satellites, voltage, temp_string, hum_string);
-    
+    // pull data together into a longer string to log to SD card and a shorter string to transmit to earth
+    sprintf(log_datastring, "%s,%d,%s,%s,%s,%s,%d,%d,%d,%s,%s,%s", callsign, counter ,time, new_lat, new_lon, altitude, lock, flightmode, satellites, voltage, temp_string, hum_string);
+    sprintf(send_datastring, "%s,%d,%s,%s,%s,%s,%d,%d,%d,%s", callsign, counter ,time, new_lat, new_lon, altitude, lock, flightmode, satellites, temp_string);
     
     
     logfile = SD.open("data.txt", FILE_WRITE); // open logfile
     
     if (logfile){  // if log file opened ok
-      logfile.println(datastring); //write datastring to file
+      logfile.println(log_datastring); //write datastring to file
       logfile.close();
     } else {
       logfile.close();
@@ -306,11 +313,11 @@ int parse_NMEA(char* mystring, int flightmode)
     
     
     
-    unsigned int CHECKSUM = gps_CRC16_checksum(datastring);  // Calculates the checksum for this datastring
+    unsigned int CHECKSUM = gps_CRC16_checksum(send_datastring);  // Calculates the checksum for this datastring
     char checksum_str[7];
     sprintf(checksum_str, "*%04X\n", CHECKSUM);
-    strcat(datastring,checksum_str);
-    rtty_txstring (datastring); 
+    strcat(send_datastring,checksum_str);
+    rtty_txstring (send_datastring); 
     counter++;
   }
   else
@@ -446,8 +453,8 @@ void loop()
     else if (character == '\n'){
       datastring[n] = '\0';
       flightmode = 0;
-      sendUBX(setNav, sizeof(setNav)/sizeof(uint8_t));
-      flightmode = getUBX_ACK(setNav);
+      sendUBX(setNav, sizeof(setNav)/sizeof(uint8_t)); // set flight mode
+      flightmode = getUBX_ACK(setNav); // check flight mode enabled
       parse_NMEA(datastring, flightmode);
       n = 0;
       flightmode = 0;
