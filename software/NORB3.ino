@@ -99,8 +99,8 @@ void rtty_txbyte (char c)
 void rtty_txbit (int bit)
 {
   digitalWrite(RADIOPIN, bit);
-  digitalWrite(LED_2, bit);
-  digitalWrite(LED_1, bit);
+  //digitalWrite(LED_2, bit);
+  //digitalWrite(LED_1, bit);
  
   //50 baud...
   delayMicroseconds(10000);  
@@ -162,7 +162,6 @@ int check_latitude(char* latitude, char* ind, float* new_latitude)
 }
  
 
-// simple function to remove leading space from a string
 char *ltrim(char *string) { return(*string == ' ' ? string + 1 : string); }
 
 
@@ -226,11 +225,11 @@ int parse_NMEA(char* mystring, int flightmode)
   int lock;
   int satellites;
   char altitude[10];
-  char log_datastring[100] = "";
-  char send_datastring[100] = "";
+  char log_datastring[102] = "";
+  char send_datastring[102] = "";
   int check_latitude_error;
   int check_longitude_error;
-  char* callsign = "NORB_2";
+  char* callsign = "$$$$NORB2";
   float vbatt;
   char voltage[10];
   float temp;
@@ -295,7 +294,7 @@ int parse_NMEA(char* mystring, int flightmode)
     dtostrf(temp,3,2,temp_string);
     dtostrf(hum,3,2,hum_string);
     
-    trimmed_lon = ltrim(new_lon); // if payload is east of prime meridian, a leading space needs to be removed
+    trimmed_lon = ltrim(new_lon);
     
     // pull data together into a longer string to log to SD card and a shorter string to transmit to earth
     sprintf(log_datastring, "%s,%d,%s,%s,%s,%s,%d,%d,%d,%s,%s,%s", callsign, counter ,time, new_lat, new_lon, altitude, lock, flightmode, satellites, voltage, temp_string, hum_string);
@@ -312,7 +311,8 @@ int parse_NMEA(char* mystring, int flightmode)
     }
     
     
-    
+    digitalWrite(LED_1, LOW);
+    digitalWrite(LED_2, LOW);
     unsigned int CHECKSUM = gps_CRC16_checksum(send_datastring);  // Calculates the checksum for this datastring
     char checksum_str[7];
     sprintf(checksum_str, "*%04X\n", CHECKSUM);
@@ -322,6 +322,8 @@ int parse_NMEA(char* mystring, int flightmode)
   }
   else
   {
+    digitalWrite(LED_1, HIGH);
+    digitalWrite(LED_2, HIGH);
     return 0;
   }
 }
@@ -360,7 +362,7 @@ uint16_t gps_CRC16_checksum (char *string)
   crc = 0xFFFF;
  
   // Calculate checksum ignoring the first two $s
-  for (i = 2; i < strlen(string); i++)
+  for (i = 4; i < strlen(string); i++)
   {
     c = string[i];
     crc = _crc_xmodem_update (crc, c);
