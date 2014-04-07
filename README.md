@@ -1,6 +1,7 @@
 WARNING - There is a slight design issue with the schematic for the PCB which I had to bodge to get the micro SD working. The VSS pins of the connector should be connected to a GND point on the board, which for some reason it isn't. So, I had to solder a wire going from the connector to a ground point on the board; not pretty but it works.
 
 
+The main code here is delay driven. There is also working code for interrupt driven RTTY in the repository, however it doesn't allow use of the NORB 3 board's SD socket as of yet. The interrupt driven code is a far more efficient way to run the microcontroller, despite the lack of support for SD cards, but is a script more suited to the NORB 4 float boards which have their own repository.
 
 
 
