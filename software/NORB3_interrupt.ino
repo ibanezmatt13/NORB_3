@@ -1,5 +1,6 @@
 #include <util/crc16.h>
 #include <SHT1x.h>
+#include <SD.h>
 
 #define RADIOPIN 9
 #define LED_1 5
@@ -8,6 +9,7 @@
 #define clockPin A5
 
 SHT1x sht1x(dataPin, clockPin); 
+File logfile; // file object for SD
 
 int counter = 0; // sentence id
 int tx_status = 0;
@@ -198,6 +200,8 @@ int parse_NMEA(char* mystring, int flightmode)
   float hum;
   char temp_string[10];
   char hum_string[10];
+  char log_datastring[102] = "";
+  
   
  
   // split NMEA string into individual data fields and check that a certain number of values have been obtained
@@ -213,6 +217,7 @@ int parse_NMEA(char* mystring, int flightmode)
     // check for a valid lock
     if (lock == 0)
     {
+      digitalWrite(LED_2, HIGH);
       return 0;
     }
     
@@ -269,6 +274,18 @@ int parse_NMEA(char* mystring, int flightmode)
     strcat(send_datastring,checksum_str);
     counter++;
     ptr = send_datastring;
+    
+    sprintf(log_datastring, "%s,%d,%s,%s,%s,%s,%d,%d,%d,%s,%s,%s", callsign, counter ,time, new_lat, new_lon, altitude, lock, flightmode, satellites, voltage, temp_string, hum_string);
+    
+    logfile = SD.open("data.txt", FILE_WRITE); // open logfile
+    
+    if (logfile){  // if log file opened ok
+      logfile.println(log_datastring); //write datastring to file
+      logfile.close();
+    } else {
+      logfile.close();
+    }
+    
   }
   else
   {
@@ -284,7 +301,7 @@ void initialise_interrupt()
   cli();          // disable global interrupts
   TCCR1A = 0;     // set entire TCCR1A register to 0
   TCCR1B = 0;     // same for TCCR1B
-  OCR1A = F_CPU / 1024 / 49;  // set compare match register to desired timer count:
+  OCR1A = F_CPU / 1024 / 299;  // set compare match register to desired timer count for 300 baud RTTY:
   TCCR1B |= (1 << WGM12);   // turn on CTC mode:
   // Set CS10 and CS12 bits for:
   TCCR1B |= (1 << CS10);
@@ -396,6 +413,7 @@ void setup()
   pinMode(LED_1, OUTPUT);
   pinMode(LED_2, OUTPUT);
   pinMode(10, OUTPUT); // needed for SD library
+  SD.begin(7);
   setupGPS();
   initialise_interrupt();
 }
