@@ -1,7 +1,7 @@
 WARNING - There is a slight design issue with the schematic for the PCB which I had to bodge to get the micro SD working. The VSS pins of the connector should be connected to a GND point on the board, which for some reason it isn't. So, I had to solder a wire going from the connector to a ground point on the board; not pretty but it works.
 
 
-The main code here is delay driven. There is also working code for interrupt driven RTTY in the repository.
+There are two scripts here, one for delay-driven RTTY, and one for interrupt-driven RTTY. The delay-driven code has been flown and proved to work perfectly; the interrupt-driven code works fine on the ground but has not had an approval flight just yet.
 
 
 
